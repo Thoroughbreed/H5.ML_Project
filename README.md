@@ -31,14 +31,26 @@
 </details>
 
 ## Summary
+This is a demo project showing a proof of concept use for Machine Learning at my fifth semester.
+The project is not supposed to be very accurate, but only to showcase the use of ML in a real world application, using real world training data.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Case
+#### Event agency want to improve their premiseses
+A local event agency contacted our firm to get a machine learning model of the use of their location and parking place. 
+They would like an AI to monitor their area for 6 months to show how many people visit them, and how many cars park there. 
+The purpose of this task is to:
+1. Take an image from a security camera and process it
+2. Locate the wanted objects on the given image (people + vehicles)
+3. Summarize the amount of recognized objects on the image
+4. Output
+   - Return the image via the WebAPI to the sender with a mark around the identified objects *(If I can make it work on macOS, and if I have time for it)*
+   - Return a string/JSON from the WebAPI to the sender with a summarization of amount of identified objects
+   - Return a string in a console application from the image with a summarization *(Failsafe model if the API doesn't get completed in time)*
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Project structure
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
 ## Project overview
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -56,6 +68,15 @@
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Roadmap
+- Gather enough data (and sanitize it)
+- Generate the machine model and verify the accuracy of it (30% confidence is my minimum as PoC)
+- Create the logic behind the object recognition
+- Test the logic, and see if it is accurate/satisfying enough
+- Create frontend
+  - Console all-in-one *(smoke test)*
+  - Razor + WebAPI returning a string/JSON
+  - Razor + WebAPI returning an image with the identified objects *(marked on the original image)*
+  - Razor + WebAPI returning an array of images with each of the identified objects cropped out of the original image
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## License
