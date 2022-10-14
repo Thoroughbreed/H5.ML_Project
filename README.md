@@ -5,8 +5,32 @@
 [![Forks][forks-shield]][forks-url]
 [![License][license-shield]][license-url]
 # Machine Learning - Final Project
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#summary">Summary</a>
+      <ul>
+        <li><a href="#case">Case</a></li>
+	      <li><a href="#project-structure">Project Structure</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#project-overview">Project Overview</a>
+      <ul>
+        <li><a href="#application-layout">Application Layout</a></li>
+        <li><a href="#uml">UML diagram/a></li>
+      </ul>
+    </li>
+    <li><a href="#changelog">Changelog</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
-### What is this?
+## Summary
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Case
@@ -15,22 +39,31 @@
 ### Project structure
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+
+## Project overview
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### Application layout
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ### UML
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Changelog
+## Changelog
 | Version | Change |
 |-|-|
 | 0.0.0 | Project |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### License
+## Roadmap
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## License
 * Software: GPLv3
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-### Contact
-
+## Contact
 
 Jan Andreasen - jan@tved.it
 
