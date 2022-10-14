@@ -20,7 +20,7 @@
       <a href="#project-overview">Project Overview</a>
       <ul>
         <li><a href="#application-layout">Application Layout</a></li>
-        <li><a href="#uml">UML diagram/a></li>
+        <li><a href="#uml">UML diagram</a></li>
       </ul>
     </li>
     <li><a href="#changelog">Changelog</a></li>
@@ -69,7 +69,7 @@ Jan Andreasen - jan@tved.it
 
 [![Twitter][twitter-shield]][twitter-url]
 
-Project Link: [https://github.com/jaa2019/SerialLogger](https://github.com/jaa2019/SerialLogger)
+Project Link: [https://github.com/Thoroughbreed/H5.ML_Project](https://github.com/Thoroughbreed/H5.ML_Project)
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
