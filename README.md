@@ -44,8 +44,12 @@ The purpose of this task is to:
 2. Locate the wanted objects on the given image (people + vehicles)
 3. ~~Summarize the amount of recognized objects on the image~~
    - I ran into several opstacles using ML.Net, and instead of switching to Python (the course was primarily about ML.Net) I decided to go with a different approach
-3b. Locate a known object on the image and return it as a string, if no object found return "Not found" and save the image in a learning-folder to use it later for a captcha-style learning process.
-4. Output
+4. Locate a known object on the image and return it as a string, if no object found return "Not found" and save the image in a learning-folder to use it later for a captcha-style learning process.
+5. Create logic for further training. Save unknown images in `./unknown` and save new known images in the respective folder.
+   - After *n* new files in the known folder, re-run the training, including the new images.
+   - Have a captcha-style "what is this" presented for users, to help give the model more accuracy.
+     - Make a fail-safe logic for images that eg. is marked "person" when the confidence of the current model is <20 to avoid trolls
+7. Output
    - ~~Return the image via the WebAPI to the sender with a mark around the identified objects *(If I can make it work on macOS, and if I have time for it)*~~
    - Return a string/JSON from the WebAPI to the sender with ~~a summarization of amount of identified objects~~ the identified object, or *Not found* if no known object was located.
    - Return a string in a console application from the image with a summarization *(Failsafe model if the API doesn't get completed in time)*
