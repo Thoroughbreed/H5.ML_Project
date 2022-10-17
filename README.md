@@ -42,10 +42,12 @@ They would like an AI to monitor their area for 6 months to show how many people
 The purpose of this task is to:
 1. Take an image from a security camera and process it
 2. Locate the wanted objects on the given image (people + vehicles)
-3. Summarize the amount of recognized objects on the image
+3. ~~Summarize the amount of recognized objects on the image~~
+   - I ran into several opstacles using ML.Net, and instead of switching to Python (the course was primarily about ML.Net) I decided to go with a different approach
+3b. Locate a known object on the image and return it as a string, if no object found return "Not found" and save the image in a learning-folder to use it later for a captcha-style learning process.
 4. Output
-   - Return the image via the WebAPI to the sender with a mark around the identified objects *(If I can make it work on macOS, and if I have time for it)*
-   - Return a string/JSON from the WebAPI to the sender with a summarization of amount of identified objects
+   - ~~Return the image via the WebAPI to the sender with a mark around the identified objects *(If I can make it work on macOS, and if I have time for it)*~~
+   - Return a string/JSON from the WebAPI to the sender with ~~a summarization of amount of identified objects~~ the identified object, or *Not found* if no known object was located.
    - Return a string in a console application from the image with a summarization *(Failsafe model if the API doesn't get completed in time)*
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -61,31 +63,30 @@ The purpose of this task is to:
 ### UML
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## Changelog
+### Changelog
 | Version | Change |
 |-|-|
 | 0.0.0 | Project |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## Roadmap
+### Roadmap
 - Gather enough data (and sanitize it)
 - Generate the machine model and verify the accuracy of it (30% confidence is my minimum as PoC)
-- Create the logic behind the object recognition
+- ~~Create the logic behind the object recognition~~
 - Test the logic, and see if it is accurate/satisfying enough
 - Create frontend
   - Console all-in-one *(smoke test)*
   - Razor + WebAPI returning a string/JSON
-  - Razor + WebAPI returning an image with the identified objects *(marked on the original image)*
-  - Razor + WebAPI returning an array of images with each of the identified objects cropped out of the original image
+  - ~~Razor + WebAPI returning an image with the identified objects *(marked on the original image)*~~
+  - ~~Razor + WebAPI returning an array of images with each of the identified objects cropped out of the original image~~
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## License
+### License
 * Software: GPLv3
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-## Contact
-
+### Contact
 Jan Andreasen - jan@tved.it
 
 [![Twitter][twitter-shield]][twitter-url]
