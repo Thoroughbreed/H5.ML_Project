@@ -56,6 +56,30 @@ The purpose of this task is to:
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Project structure
+```
+ML Project
+│   README.md
+│   LICENSE.txt    
+└───API
+│   │───Program.cs
+│   └───data
+│   │   │───test        - Test dataset
+│   │   │───train       - Train dataset
+│   │   │───val         - Validation dataset
+│   │   └───unknown     - Unknown (captcha)
+│   │
+│   └───service
+│   │   │───Service.cs  - Image classification services
+│   │   └───IService.cs
+│   │
+│   └───trainer
+│       │───Tainer.cs   - Re-train (generation incrementer)
+│       └───ITrainer.cs
+│   
+└───Frontend
+    │   404
+```
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Project overview
@@ -71,10 +95,11 @@ The purpose of this task is to:
 | Version | Change |
 |-|-|
 | 0.0.0 | Project |
+| 0.0.1 | API Startup |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Roadmap
-- [ ] Gather enough data (and sanitize it)
+- [X] Gather enough data (and sanitize it)
 - [ ] Generate the machine model and verify the accuracy of it (30% confidence is my minimum as PoC)
 - [ ] ~~Create the logic behind the object recognition~~
 - [ ] Test the logic, and see if it is accurate/satisfying enough
