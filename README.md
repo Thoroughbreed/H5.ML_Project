@@ -36,7 +36,7 @@ The project is not supposed to be very accurate, but only to showcase the use of
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Case
-#### Event agency want to improve their premiseses
+#### Event agency want to improve their premises
 A local event agency contacted our firm to get a machine learning model of the use of their location and parking place. 
 They would like an AI to monitor their area for 6 months to show how many people visit them, and how many cars park there. 
 The purpose of this task is to:
