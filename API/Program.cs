@@ -33,4 +33,6 @@ app.MapGet("/run", (Trainer _trainer) =>
     return "What the f....?";
 });
 
+app.MapPost("/runimage", (Trainer _trainer, byte[] image) => _trainer.RunImage(image));
+
 app.Run();

@@ -20,7 +20,6 @@ namespace API.trainer
         private services _service { get; set; } = new services();
         private IDataView _trainSet { get; set; }
         private IDataView _validationSet { get; set; }
-        private IDataView _testSet { get; set; }
         public ITransformer TrainedModel { get; set; }
         private int _setAmount { get; set; }
 
@@ -30,7 +29,6 @@ namespace API.trainer
             _dataPath = Path.Combine(_projectDir, "data");
             _context = new MLContext();
             _trainSet = LoadData("train");
-            _testSet = LoadData("test");
             _validationSet = LoadData("val");
 
         }
@@ -38,7 +36,7 @@ namespace API.trainer
         private IDataView LoadData(string type)
         {
             _imageDatas = _service.LoadFromDirectory(Path.Combine(_dataPath, type));
-            _setAmount = _imageDatas.Count();
+            if (type == "train") _setAmount = _imageDatas.Count();
             _imageData = _context.Data.LoadFromEnumerable(_imageDatas);
 
             var preprocessingPipeline = _context.Transforms.Conversion.MapValueToKey("LabelAsKey", "Label")
@@ -72,9 +70,17 @@ namespace API.trainer
         {
             PredictionEngine<ModelInput, ModelOutput> pEngine =
                 _context.Model.CreatePredictionEngine<ModelInput, ModelOutput>(TrainedModel);
-            ModelOutput prediction = pEngine.Predict(_context.Data.CreateEnumerable<ModelInput>(_testSet, reuseRowObject: true).First());
+            ModelOutput prediction = pEngine.Predict(_context.Data.CreateEnumerable<ModelInput>(_validationSet, reuseRowObject: true).First());
             
             OutputPrediction(prediction);
+        }
+
+        public ModelOutput RunImage(byte[] img)
+        {
+            var image = new ModelInput() { Image = img };
+            PredictionEngine<ModelInput, ModelOutput> pEngine =
+                _context.Model.CreatePredictionEngine<ModelInput, ModelOutput>(TrainedModel);
+            return pEngine.Predict(image);
         }
 
         private void OutputPrediction(ModelOutput prediction)
