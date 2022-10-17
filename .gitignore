@@ -10,7 +10,7 @@
 *.userosscache
 *.sln.docstates
 .idea/
-.DS_Store/
+*.DS_Store/
 API/data/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
