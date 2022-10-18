@@ -1,12 +1,7 @@
 using Microsoft.ML;
-using static Microsoft.ML.DataOperationsCatalog;
 using Microsoft.ML.Vision;
-using System;
-using System.Collections.Generic;
 using API.classes;
 using API.service;
-using Microsoft.OpenApi.Expressions;
-
 
 namespace API.trainer
 {
@@ -22,6 +17,8 @@ namespace API.trainer
         private IDataView _validationSet { get; set; }
         public ITransformer TrainedModel { get; set; }
         private int _setAmount { get; set; }
+
+        private static readonly string[] _labels = new[] { "knallert", "bil", "cykel", "bus", "mc", "lastbil", "person" };
 
         public Trainer()
         {
@@ -81,9 +78,14 @@ namespace API.trainer
         {
             PredictionEngine<ModelInput, ModelOutput> pEngine =
                 _context.Model.CreatePredictionEngine<ModelInput, ModelOutput>(TrainedModel);
-            ModelOutput prediction = pEngine.Predict(_context.Data.CreateEnumerable<ModelInput>(_validationSet, reuseRowObject: true).First());
-            
-            OutputPrediction(prediction);
+            var predictions = _context.Data.CreateEnumerable<ModelInput>(_validationSet, reuseRowObject: true).Take(10);
+
+            foreach (var item in predictions)
+            {
+                var debug = item.LabelAsKey;
+                ModelOutput prediction = pEngine.Predict(item);
+                OutputPrediction(prediction); 
+            }
         }
 
         public ModelOutput RunImage(byte[] img)
@@ -96,8 +98,53 @@ namespace API.trainer
 
         private void OutputPrediction(ModelOutput prediction)
         {
+            int scoreIndex = prediction.PredictedLabel switch
+            {
+                "moped" => 0,
+                "car" => 1,
+                "bike" => 2,
+                "bus" => 3,
+                "motorbike" => 4,
+                "truck" => 5,
+                "person" => 6,
+                _ => 9
+            };
+            var score = prediction.Score[scoreIndex]*100;
             var imageName = Path.GetFileName(prediction.ImagePath);
-            Console.WriteLine($"Image: {imageName} \t| Actual Value: {prediction.Label} \t| Predicted Value: {prediction.PredictedLabel}");
+            
+            switch (score)
+            {
+                case > 75:
+                    Console.WriteLine($"Image: {imageName} " +
+                                      $"\t| Actual Value: {prediction.Label} " +
+                                      $"\t| Predicted Value: {prediction.PredictedLabel}" +
+                                      $"\t| Score: {(score):N2}");
+                    break;
+                case < 20:
+                {
+                    Console.WriteLine($"I'm sorry Dave, I have absolutely no idea what {imageName} is, but here's my best guess:");
+                
+                    for (var i = 0; i < prediction.Score.Length; i++)
+                    {
+                        Console.Write($"{(prediction.Score[i]*100).ToString("N2")}%");
+                        Console.WriteLine($"% {_labels[i]}");
+                    }
+                    break;
+                }
+                default:
+                {
+                    Console.WriteLine($"I beleive that {imageName} is a {prediction.PredictedLabel}, it should be a {prediction.Label} - I'm {score.ToString("N2")}% certain tho.");
+                    Console.WriteLine($"However, it could also be a walrus ...");
+                
+                    for (var i = 0; i < prediction.Score.Length; i++)
+                    {
+                        Console.Write($"{(prediction.Score[i]*100).ToString("N2")}%");
+                        Console.WriteLine($"% {_labels[i]}");
+                    }
+                    break;
+                }
+            }
+            
         }
     }
 }
