@@ -96,19 +96,25 @@ ML Project
 |-|-|
 | 0.0.0 | Project |
 | 0.0.1 | API Startup |
+| 0.0.2 | Finalized debugging endpoints. Can start training from API |
+| 0.0.3 | Added testing one random image |
+| 0.1.0 | Added service to assess an image through the API |
+| 0.1.1 | Refactored code |
+| 0.1.2 | Edited deprecated methods, removed debugging method calls |
+| 0.1.3 | Removed "Test random image" endpoint | 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Roadmap
 - [X] Gather enough data (and sanitize it)
-- [ ] Generate the machine model and verify the accuracy of it (30% confidence is my minimum as PoC)
+- [X ] Generate the machine model and verify the accuracy of it (30% confidence is my minimum as PoC)
 - [ ] ~~Create the logic behind the object recognition~~
-- [ ] Test the logic, and see if it is accurate/satisfying enough
-  - [ ] Test the identification logic (is it a person, a car, a bike, a tree or other?)
+- [X] Test the logic, and see if it is accurate/satisfying enough
+  - [X] Test the identification logic (is it a person, a car, a bike, a tree or other?)
   - [ ] Test the re-train logic to see if we can make it more accurate over time
   - [ ] Test the fail-safe logic, avoiding trolls (an image of a flower marked as a car)
 - [ ] Create frontend
   - [ ] Console all-in-one *(smoke test)*
-  - [ ] Razor + WebAPI returning a string/JSON
+  - [X] Razor + WebAPI returning a string/JSON
   - [ ] ~~Razor + WebAPI returning an image with the identified objects *(marked on the original image)*~~
   - [ ] ~~Razor + WebAPI returning an array of images with each of the identified objects cropped out of the original image~~
 <p align="right">(<a href="#top">back to top</a>)</p>

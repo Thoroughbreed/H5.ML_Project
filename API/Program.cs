@@ -1,3 +1,4 @@
+using API.service;
 using API.trainer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<Trainer>();
+builder.Services.AddSingleton<services>();
 
 var app = builder.Build();
 
@@ -21,18 +22,12 @@ app.MapControllers();
 
 app.MapGet("/", () => "HELL ....");
 
-app.MapGet("/ctor", (Trainer _trainer) =>
-{
-    _trainer.TrainData();
-    return "What the f....?";
-});
+app.MapGet("/ctor", (services _service) => "I'm ready milord");
 
-app.MapGet("/run", (Trainer _trainer) =>
-{
-    _trainer.RunSingleImage();
-    return "What the f....?";
-});
+// app.MapGet("/run", (services _service) => _service.TestImage(null));
 
-app.MapPost("/runimage", (Trainer _trainer, byte[] image) => _trainer.RunImage(image));
+app.MapGet("/retrain", (services _service) => _service.ReTrain());
+
+app.MapPost("/runimage", (services _service, byte[] image) => _service.TestImage(image));
 
 app.Run();

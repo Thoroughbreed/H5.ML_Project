@@ -1,50 +1,71 @@
 using Microsoft.ML;
 using Microsoft.ML.Vision;
 using API.classes;
-using API.service;
 
 namespace API.trainer
 {
     public class Trainer
     {
-        private IDataView _imageData { get; set; }
-        private readonly string _projectDir;
+        private IDataView? _imageData { get; set; }
         private string _dataPath { get; set; }
         private MLContext _context { get; set; }
-        private IEnumerable<ImageData> _imageDatas { get; set; }
-        private services _service { get; set; } = new services();
-        private IDataView _trainSet { get; set; }
-        private IDataView _validationSet { get; set; }
-        public ITransformer TrainedModel { get; set; }
+        private IDataView? _trainSet { get; set; }
+        private IDataView? _validationSet { get; set; }
+        private ITransformer? TrainedModel { get; set; }
         private int _setAmount { get; set; }
+        private int _generation { get; set; }
 
-        private static readonly string[] _labels = new[] { "knallert", "bil", "cykel", "bus", "mc", "lastbil", "person" };
 
-        public Trainer()
+        public Trainer(string dataPath)
         {
-            _projectDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../"));
-            _dataPath = Path.Combine(_projectDir, "data");
+            _dataPath = dataPath;
             _context = new MLContext();
-            _trainSet = LoadData("train");
-            _validationSet = LoadData("val");
-
+            foreach (var file in Directory.GetFiles(_dataPath, "*.i", searchOption: SearchOption.TopDirectoryOnly))
+            {
+                var ex = Path.GetExtension(file);
+                int i = 0;
+                if (ex != ".i") continue;
+                int.TryParse(new FileInfo(file).Name.Split('.')[0], out i);
+                _generation = i;
+                break;
+            }
         }
 
-        private IDataView LoadData(string type)
+        public void ControlData(int newNum)
         {
-            _imageDatas = _service.LoadFromDirectory(Path.Combine(_dataPath, type));
-            if (type == "train") _setAmount = _imageDatas.Count();
-            _imageData = _context.Data.LoadFromEnumerable(_imageDatas);
+            bool force = newNum > _setAmount + 10;
+            if (!force) return;
+            TrainData(force);
+        }
 
-            var preprocessingPipeline = _context.Transforms.Conversion.MapValueToKey("LabelAsKey", "Label")
+        public void LoadData(IEnumerable<ImageData> data, bool train = true)
+        {
+            _imageData = _context.Data.LoadFromEnumerable(data);
+
+            var preprocessingPipeline = _context.Transforms.Conversion
+                .MapValueToKey("LabelAsKey", "Label")
                 .Append(_context.Transforms.LoadRawImageBytes("Image", _dataPath, "ImagePath"));
             IDataView shuffledData = _context.Data.ShuffleRows(_imageData);
-            return preprocessingPipeline.Fit(shuffledData).Transform(shuffledData);
+
+            switch (train)
+            {
+                case true:
+                {
+                    _setAmount = data.Count();
+                    _trainSet = preprocessingPipeline.Fit(shuffledData).Transform(shuffledData);
+                    break;
+                }
+                case false:
+                {
+                    _validationSet = preprocessingPipeline.Fit(shuffledData).Transform(shuffledData);
+                    break;
+                }
+            }
         }
 
-        public void TrainData()
+        public void TrainData(bool forceTrain = false)
         {
-            if (!File.Exists(_dataPath + "model.mod"))
+            if (!File.Exists(_dataPath + "model.mod") || forceTrain)
             {
                 var cOpt = new ImageClassificationTrainer.Options()
                 {
@@ -64,28 +85,21 @@ namespace API.trainer
                     .Append(_context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 
                 TrainedModel = trainingPipeline.Fit(_trainSet); // Start the damn training!
+                Save();
             }
-
-            TrainedModel = _context.Model.Load($"{_dataPath}model.mod", out var _);
-        }
-
-        private void SaveModel()
-        {
-            _context.Model.Save(TrainedModel, _trainSet.Schema, _dataPath + "model.mod");
-        }
-
-        public void RunSingleImage()
-        {
-            PredictionEngine<ModelInput, ModelOutput> pEngine =
-                _context.Model.CreatePredictionEngine<ModelInput, ModelOutput>(TrainedModel);
-            var predictions = _context.Data.CreateEnumerable<ModelInput>(_validationSet, reuseRowObject: true).Take(10);
-
-            foreach (var item in predictions)
+            else
             {
-                var debug = item.LabelAsKey;
-                ModelOutput prediction = pEngine.Predict(item);
-                OutputPrediction(prediction); 
+                TrainedModel = _context.Model.Load($"{_dataPath}model.mod", out var _);
             }
+        }
+
+        private void Save()
+        {
+            _generation++;
+            var i = _generation;
+            File.Create(_dataPath + $"/{i}.i");
+            File.Copy(_dataPath + "model.mod", _dataPath + $"gen{i}.mod");
+            _context.Model.Save(TrainedModel, _trainSet.Schema, _dataPath + "model.mod");
         }
 
         public ModelOutput RunImage(byte[] img)
@@ -95,56 +109,28 @@ namespace API.trainer
                 _context.Model.CreatePredictionEngine<ModelInput, ModelOutput>(TrainedModel);
             return pEngine.Predict(image);
         }
-
-        private void OutputPrediction(ModelOutput prediction)
+        /// <summary>
+        /// Deprecated - was used for debugging purposes
+        /// Took 10 random pictures and tried to classify them.
+        /// </summary>
+        /// <returns>List containing the predictions</returns>
+        private List<ModelOutput> RunMultipleImage()
         {
-            int scoreIndex = prediction.PredictedLabel switch
+            PredictionEngine<ModelInput, ModelOutput> pEngine =
+                _context.Model.CreatePredictionEngine<ModelInput, ModelOutput>(TrainedModel);
+            var predictions = _context.Data.CreateEnumerable<ModelInput>(_validationSet, reuseRowObject: true).Take(10);
+
+            var output = new List<ModelOutput>();
+            foreach (var item in predictions)
             {
-                "moped" => 0,
-                "car" => 1,
-                "bike" => 2,
-                "bus" => 3,
-                "motorbike" => 4,
-                "truck" => 5,
-                "person" => 6,
-                _ => 9
-            };
-            var score = prediction.Score[scoreIndex]*100;
-            var imageName = Path.GetFileName(prediction.ImagePath);
-            
-            switch (score)
-            {
-                case > 75:
-                    Console.WriteLine($"Image: {imageName} " +
-                                      $"\t| Actual Value: {prediction.Label} " +
-                                      $"\t| Predicted Value: {prediction.PredictedLabel}" +
-                                      $"\t| Score: {(score):N2}");
-                    break;
-                case < 20:
-                {
-                    Console.WriteLine($"I'm sorry Dave, I have absolutely no idea what {imageName} is, but here's my best guess:");
-                
-                    for (var i = 0; i < prediction.Score.Length; i++)
-                    {
-                        Console.Write($"{(prediction.Score[i]*100).ToString("N2")}%");
-                        Console.WriteLine($"% {_labels[i]}");
-                    }
-                    break;
-                }
-                default:
-                {
-                    Console.WriteLine($"I beleive that {imageName} is a {prediction.PredictedLabel}, it should be a {prediction.Label} - I'm {score.ToString("N2")}% certain tho.");
-                    Console.WriteLine($"However, it could also be a walrus ...");
-                
-                    for (var i = 0; i < prediction.Score.Length; i++)
-                    {
-                        Console.Write($"{(prediction.Score[i]*100).ToString("N2")}%");
-                        Console.WriteLine($"% {_labels[i]}");
-                    }
-                    break;
-                }
+                var debug = item.LabelAsKey;
+                ModelOutput prediction = pEngine.Predict(item);
+                //TODO OutputPrediction(prediction); 
+                output.Add(prediction);
             }
-            
+
+            return output;
         }
+
     }
 }
