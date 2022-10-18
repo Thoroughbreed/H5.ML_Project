@@ -64,14 +64,14 @@ public class services
         // _trainer.Save();
     }
 
-    public List<Tuple<string, float>> TestImage(byte[]? image)
+    public async Task<List<Tuple<string, float>>> TestImage(byte[]? image)
     {
         var _out = new List<Tuple<string, float>>();
         if (image != null)
         {
             imgByte = image;
             var result = _trainer.RunImage(image);
-            _out.Add(OutputPrediction(result));
+            _out.Add(await OutputPrediction(result));
         }
         else
         {
@@ -87,30 +87,31 @@ public class services
         _trainer.ControlData(number);
     }
 
-    private Tuple<string, float> OutputPrediction(ModelOutput prediction)
+    private async Task<Tuple<string, float>> OutputPrediction(ModelOutput prediction)
     {
         int scoreIndex = FindScoreIndex(prediction.PredictedLabel);
         var score = prediction.Score[scoreIndex] * 100;
         var imageName = Path.GetFileName(prediction.ImagePath);
         imgGuid = Guid.NewGuid();
-        
-        if (score < 20)
+
+        if (score < 75) // TODO is 75% too low? Should the limit be higher...?
         {
             if (!string.IsNullOrWhiteSpace(prediction.ImagePath))
             {
-                File.Move(prediction.ImagePath, Path.Combine(_path,"unknown"));
+                File.Move(prediction.ImagePath, Path.Combine(_path, "unknown"));
             }
             else
             {
                 var file = File.Create(string.IsNullOrWhiteSpace(imageName)
                     ? Path.Combine(_path, "unknown", imgGuid + ".jpg")
                     : Path.Combine(_path, "unknown", imageName + ".jpg"));
-                file.WriteAsync(imgByte);
+                await file.WriteAsync(imgByte);
                 file.Close();
             }
         }
 
-        switch (score) // TODO Fix returntype dammit!
+        // This is entirely for debugging purposes 
+        switch (score) // TODO Fix fucking return type dammit!
         {
             case > 75:
                 Console.WriteLine($"Image: {imageName} " +
@@ -118,7 +119,7 @@ public class services
                                   $"\t| Predicted Value: {prediction.PredictedLabel}" +
                                   $"\t| Score: {(score):N2}");
                 break;
-            case < 20:
+            case < 35:
             {
                 Console.WriteLine(
                     $"I'm sorry Dave, I have absolutely no idea what {imageName} is, but here's my best guess:");
@@ -147,6 +148,6 @@ public class services
             }
         }
 
-        return new Tuple<string, float>(prediction.PredictedLabel, score);
+        return score > 74 ? new Tuple<string, float>(prediction.PredictedLabel, score) : new Tuple<string, float>($"Image not classified, closest match was {prediction.PredictedLabel}", score);
     }
 }

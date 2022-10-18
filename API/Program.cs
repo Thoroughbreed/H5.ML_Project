@@ -28,6 +28,6 @@ app.MapGet("/ctor", (services _service) => "I'm ready milord");
 
 app.MapGet("/retrain", (services _service) => _service.ReTrain());
 
-app.MapPost("/runimage", (services _service, byte[] image) => _service.TestImage(image));
+app.MapPost("/runimage", async (services _service, byte[] image) => await _service.TestImage(image));
 
 app.Run();
