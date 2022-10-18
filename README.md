@@ -136,8 +136,8 @@ Project Link: [https://github.com/Thoroughbreed/H5.ML_Project](https://github.co
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[build-shield]: https://img.shields.io/badge/Build-failed-red.svg
-[test-shield]: https://img.shields.io/badge/Tests-failed-red.svg
+[build-shield]: https://img.shields.io/badge/Build-passed-brightgreen.svg
+[test-shield]: https://img.shields.io/badge/Tests-passed-brightgreen.svg
 [contributors-shield]: https://img.shields.io/github/contributors/Thoroughbreed/H5.ML_Project.svg?style=badge
 [contributors-url]: https://github.com/Thoroughbreed/H5.ML_Project/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/Thoroughbreed/H5.ML_Project.svg?style=badge
