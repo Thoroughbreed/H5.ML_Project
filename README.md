@@ -1,6 +1,7 @@
 ![Build succeeded][build-shield]
 ![Test passing][test-shield]
 [![Issues][issues-shield]][issues-url]
+[![Issues][closed-shield]][issues-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![License][license-shield]][license-url]
@@ -142,6 +143,7 @@ Project Link: [https://github.com/Thoroughbreed/H5.ML_Project](https://github.co
 [forks-shield]: https://img.shields.io/github/forks/Thoroughbreed/H5.ML_Project.svg?style=badge
 [forks-url]: https://github.com/Thoroughbreed/H5.ML_Project/network/members
 [issues-shield]: https://img.shields.io/github/issues/Thoroughbreed/H5.ML_Project.svg?style=badge
+[closed-shield]: https://img.shields.io/github/issues-closed/Thoroughbreed/H5.ML_Project?label=%20
 [issues-url]: https://github.com/Thoroughbreed/H5.ML_Project/issues
 [license-shield]: https://img.shields.io/github/license/Thoroughbreed/H5.ML_Project.svg?style=badge
 [license-url]: https://github.com/Thoroughbreed/H5.ML_Project/blob/master/LICENSE
