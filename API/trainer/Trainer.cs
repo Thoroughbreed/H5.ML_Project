@@ -125,7 +125,6 @@ namespace API.trainer
             {
                 var debug = item.LabelAsKey;
                 ModelOutput prediction = pEngine.Predict(item);
-                //TODO OutputPrediction(prediction); 
                 output.Add(prediction);
             }
 
