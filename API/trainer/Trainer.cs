@@ -47,23 +47,34 @@ namespace API.trainer
 
         public void TrainData()
         {
-            var cOpt = new ImageClassificationTrainer.Options()
+            if (!File.Exists(_dataPath + "model.mod"))
             {
-                FeatureColumnName = "Image",
-                LabelColumnName = "LabelAsKey",
-                ValidationSet = _validationSet,
-                Arch = ImageClassificationTrainer.Architecture.ResnetV2101,
-                MetricsCallback = (metrics) => Console.WriteLine(metrics),
-                TestOnTrainSet = false,
-                ReuseTrainSetBottleneckCachedValues = true,
-                ReuseValidationSetBottleneckCachedValues = true
-            };
+                var cOpt = new ImageClassificationTrainer.Options()
+                {
+                    FeatureColumnName = "Image",
+                    LabelColumnName = "LabelAsKey",
+                    ValidationSet = _validationSet,
+                    // Arch = ImageClassificationTrainer.Architecture.ResnetV2101,
+                    Arch = ImageClassificationTrainer.Architecture.ResnetV250,
+                    MetricsCallback = (metrics) => Console.WriteLine(metrics),
+                    TestOnTrainSet = false,
+                    ReuseTrainSetBottleneckCachedValues = true,
+                    ReuseValidationSetBottleneckCachedValues = true
+                };
 
-            var trainingPipeline = _context.MulticlassClassification.Trainers
-                .ImageClassification(cOpt)
-                .Append(_context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+                var trainingPipeline = _context.MulticlassClassification.Trainers
+                    .ImageClassification(cOpt)
+                    .Append(_context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 
-            TrainedModel = trainingPipeline.Fit(_trainSet); // Start the damn training!
+                TrainedModel = trainingPipeline.Fit(_trainSet); // Start the damn training!
+            }
+
+            TrainedModel = _context.Model.Load($"{_dataPath}model.mod", out var _);
+        }
+
+        private void SaveModel()
+        {
+            _context.Model.Save(TrainedModel, _trainSet.Schema, _dataPath + "model.mod");
         }
 
         public void RunSingleImage()
