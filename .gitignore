@@ -10,10 +10,12 @@
 *.userosscache
 *.sln.docstates
 .idea/
-.DS_Store/
+*.DS_Store/
+API/data/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+*.mod
 
 # Mono auto generated files
 mono_crash.*
