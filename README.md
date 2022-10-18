@@ -103,6 +103,7 @@ ML Project
 | 0.1.1 | Refactored code |
 | 0.1.2 | Edited deprecated methods, removed debugging method calls |
 | 0.1.3 | Removed "Test random image" endpoint | 
+| 0.2.0 | First iteration of the API done, and ready for testing |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Roadmap
