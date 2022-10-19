@@ -106,6 +106,7 @@ ML Project
 | 0.2.0 | First iteration of the API done, and ready for testing |
 | 0.2.1 | Initial push of the Blazor SPA frontend
 | 0.3.0 | Made changes in how the API returns when re-training (424 if conditions are not met, 202 if they are)
+| 0.4.0 | Added two more endpoints to the API, captcha! (Looking at you Merlin)
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Roadmap
