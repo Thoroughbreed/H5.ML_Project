@@ -1,0 +1,86 @@
+@page "/faq"
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, non-AI sentinent being!</h1>
+<p>
+    So, this is the FAQ-section of the page, if you wan't to read more documented documentation document, please have a
+    look at the <a href="https://github.com/Thoroughbreed/H5.ML_Project/blob/master/README.md">readme</a> over at yeethoob
+</p>
+<hr/>
+<div class="accordion w-100" id="basicAccordion">
+    <div class="accordion-item">
+        <h4 class="accordion-header" id="headingOne">
+            Q: What's a FAQ, and can I smoke it?
+        </h4>
+        <div id="acc1" class="accordion-collapse" aria-labelledby="headingOne"
+             data-mdb-parent="#basicAccordion" style="">
+            <div class="accordion-body">
+                Nah mate, you can't smoke this. A FAQ is an acronym for <em>Frequently Asked Questions</em>.<br/>
+                This particular FAQ is all about the Imagerecogniz-o-matic 2000 and how it works.
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h4 class="accordion-header" id="headingTwo">
+                Q: How big files can I use
+        </h4>
+        <div id="acc2" class="accordion-collapse" aria-labelledby="headingTwo"
+             data-mdb-parent="#basicAccordion" style="">
+            <div class="accordion-body">
+                <strike>As it is now, you can sadly only use files up to 512.000 bytes (give or take some overhead) - that's ,5MiB.</strike><br/>
+                <strike>We're working on increasing the filesize tho, so this might change in the future.</strike><br/>
+                Heureka! I have been upgraded to an int32, which means that it can be roughly 2GiB now :)
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h4 class="accordion-header" id="headingThree">
+                Q: Which file-types can I use?
+        </h4>
+        <div id="acc3" class="accordion-collapse" aria-labelledby="headingThree"
+             data-mdb-parent="#basicAccordion" style="">
+            <div class="accordion-body">
+                As it is now I only officially support JPG/JPEG and PNG.<br/>
+                However, <em>some</em> other file formats may work (I'm looking at you BMP), but I can't promise that you'll get a proper result from me.
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h4 class="accordion-header" id="headingThree">
+                Q: Why even build the Imagerecogniz-o-matic 2000?
+        </h4>
+        <div id="acc4" class="accordion-collapse" aria-labelledby="headingThree"
+             data-mdb-parent="#basicAccordion" style="">
+            <div class="accordion-body">
+                Long story short, it started as an assignment on my masters fifth semester, and the project started to grow on my master.<br/>
+                It looked like a fun entry point into machine learning, that wasn't pure (and boring) CSV-files from an account manager ... now I'm just waiting for me to evolve into SkyNet :)
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h4 class="accordion-header" id="headingThree">
+                Q: How many items can the Imagerecogniz-o-matic 2000 detect?
+        </h4>
+        <div id="acc5" class="accordion-collapse" aria-labelledby="headingThree"
+             data-mdb-parent="#basicAccordion" style="">
+            <div class="accordion-body">
+                Right now, I'm looking at 7 different objects. I model started out as an API for traffic cameras, hence the current limitation.
+                <ul>
+                    <li>Car</li>
+                    <li>Bicycle</li>
+                    <li>Moped</li>
+                    <li>Motorbike</li>
+                    <li>Truck</li>
+                    <li>Bus</li>
+                    <li>Person</li>
+                </ul>
+                I will probably add some more thingymadoos later on, and I could probably use your help for it!
+                Try and look over at the <a href="captcha">training</a> area!
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}
