@@ -1,3 +1,4 @@
+using System.Net;
 using API.classes;
 using API.trainer;
 
@@ -5,11 +6,11 @@ namespace API.service;
 
 public class services
 {
-    private Trainer _trainer;
-    private string _path;
-    private Guid imgGuid;
-    private byte[] imgByte;
-    private static readonly string[] _labels = new[] { "knallert", "bil", "cykel", "bus", "mc", "lastbil", "person" };
+    private readonly Trainer _trainer;
+    private readonly string _path;
+    private Guid _imgGuid;
+    private byte[] _imgByte;
+    private static readonly string[] Labels = new[] { "knallert", "bil", "cykel", "bus", "mc", "lastbil", "person" };
 
     public services()
     {
@@ -69,7 +70,7 @@ public class services
         var _out = new List<Tuple<string, float>>();
         if (image != null)
         {
-            imgByte = image;
+            _imgByte = image;
             var result = _trainer.RunImage(image);
             _out.Add(await OutputPrediction(result));
         }
@@ -81,10 +82,32 @@ public class services
         return _out;
     }
 
-    public void ReTrain()
+    public async Task<HttpStatusCode> ReTrain()
     {
         var number = LoadFromDirectory(Path.Combine(_path, "train")).Count();
-        _trainer.ControlData(number);
+        var current = _trainer.ControlData();
+        return _trainer.ReTrain(number > current + 10) ? HttpStatusCode.Accepted : HttpStatusCode.FailedDependency;
+    }
+
+    public async Task<Tuple<string, float, byte[], string>> Captcha()
+    {
+        var unknowns = LoadFromDirectory(Path.Combine(_path, "unknown"));
+        if (!unknowns.Any()) return new Tuple<string, float, byte[], string>("What did you do?", 404, Array.Empty<byte>(), "");
+        var imageInfo = unknowns.First();
+        var image = File.ReadAllBytes(imageInfo.ImagePath);
+        var result = await TestImage(image);
+        return new Tuple<string, float, byte[], string>(result[0].Item1, result[0].Item2, image, imageInfo.ImagePath);
+    }
+
+    public async void CaptchaReturn(Tuple<string, string> reply)
+    {
+        var classification = reply.Item1;
+        var imgPath = reply.Item2;
+
+        var image = File.ReadAllBytes(imgPath);
+        var result = await TestImage(image);
+        if (result[0].Item2 < 33) return;
+        File.Move(imgPath, Path.Combine(_path,"train", classification));
     }
 
     private async Task<Tuple<string, float>> OutputPrediction(ModelOutput prediction)
@@ -92,7 +115,7 @@ public class services
         int scoreIndex = FindScoreIndex(prediction.PredictedLabel);
         var score = prediction.Score[scoreIndex] * 100;
         var imageName = Path.GetFileName(prediction.ImagePath);
-        imgGuid = Guid.NewGuid();
+        _imgGuid = Guid.NewGuid();
 
         if (score < 75) // TODO is 75% too low? Should the limit be higher...?
         {
@@ -103,9 +126,9 @@ public class services
             else
             {
                 var file = File.Create(string.IsNullOrWhiteSpace(imageName)
-                    ? Path.Combine(_path, "unknown", imgGuid + ".jpg")
+                    ? Path.Combine(_path, "unknown", _imgGuid + ".jpg")
                     : Path.Combine(_path, "unknown", imageName + ".jpg"));
-                await file.WriteAsync(imgByte);
+                await file.WriteAsync(_imgByte);
                 file.Close();
             }
         }
@@ -127,7 +150,7 @@ public class services
                 for (var i = 0; i < prediction.Score.Length; i++)
                 {
                     Console.Write($"{(prediction.Score[i] * 100).ToString("N2")}%");
-                    Console.WriteLine($"% {_labels[i]}");
+                    Console.WriteLine($"% {Labels[i]}");
                 }
 
                 break;
@@ -141,7 +164,7 @@ public class services
                 for (var i = 0; i < prediction.Score.Length; i++)
                 {
                     Console.Write($"{(prediction.Score[i] * 100).ToString("N2")}%");
-                    Console.WriteLine($"% {_labels[i]}");
+                    Console.WriteLine($"% {Labels[i]}");
                 }
 
                 break;

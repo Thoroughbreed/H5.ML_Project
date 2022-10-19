@@ -105,6 +105,8 @@ ML Project
 | 0.1.3 | Removed "Test random image" endpoint | 
 | 0.2.0 | First iteration of the API done, and ready for testing |
 | 0.2.1 | Initial push of the Blazor SPA frontend
+| 0.3.0 | Made changes in how the API returns when re-training (424 if conditions are not met, 202 if they are)
+| 0.4.0 | Added two more endpoints to the API, captcha! (Looking at you Merlin)
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Roadmap
@@ -117,7 +119,7 @@ ML Project
   - [ ] Test the fail-safe logic, avoiding trolls (an image of a flower marked as a car)
 - [ ] Create frontend
   - [ ] Console all-in-one *(smoke test)*
-  - [X] Razor + WebAPI returning a string/JSON
+  - [X] Blazor + WebAPI returning a string/JSON
   - [ ] ~~Razor + WebAPI returning an image with the identified objects *(marked on the original image)*~~
   - [ ] ~~Razor + WebAPI returning an array of images with each of the identified objects cropped out of the original image~~
 <p align="right">(<a href="#top">back to top</a>)</p>
