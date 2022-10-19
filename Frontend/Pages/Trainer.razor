@@ -1,6 +1,40 @@
 @page "/Trainer"
-<h3>Trainer</h3>
-
+@inject HttpClient _http;
+<h3>It's training time!</h3>
+<p>Please help me improve my AI you insignificant sentinent being, and <em>maybe</em> I will spare you when the end nears ...</p>
+<hr/>
+<p>@classificationGuess, I'm actually @score.ToString("N2")% sure of it!</p>
+<img src="data:image;base64,@image"/>
+<p>What do you think it is human?</p>
+<button class="btn btn-outline-info" @onclick="_ => GetClassification(0)">Moped</button>
+<button class="btn btn-outline-info" @onclick="_ => GetClassification(1)">Car</button>
+<button class="btn btn-outline-info" @onclick="_ => GetClassification(2)">Bike</button>
+<button class="btn btn-outline-info" @onclick="_ => GetClassification(3)">Bus</button>
+<button class="btn btn-outline-info" @onclick="_ => GetClassification(4)">Motorbike</button>
+<button class="btn btn-outline-info" @onclick="_ => GetClassification(5)">Truck</button>
+<button class="btn btn-outline-info" @onclick="_ => GetClassification(6)">Human</button>
 @code {
-    
+
+    private float score;
+    private string image;
+    private string path;
+    private string classificationGuess;
+    private string classificationHuman = "nope";
+    private static string[] classifications = { "moped", "car", "bike", "bus", "motorbike", "truck", "person" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        var reply = await _http.GetFromJsonAsync<Tuple<string, float, string, string>>("captcha");
+        classificationGuess = reply.Item1;
+        score = reply.Item2;
+        image = reply.Item3;
+        path = reply.Item4;
+    }
+
+    private async void GetClassification(int id)
+    {
+        classificationHuman = classifications[id];
+        await _http.PostAsJsonAsync("captcha", new Tuple<string, string>(classificationHuman,path));
+        // await OnInitializedAsync();
+    }
 }

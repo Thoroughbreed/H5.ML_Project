@@ -65,14 +65,14 @@ public class services
         // _trainer.Save();
     }
 
-    public async Task<List<Tuple<string, float>>> TestImage(byte[]? image)
+    public async Task<List<Tuple<string, float>>> TestImage(byte[]? image, bool captcha = false)
     {
         var _out = new List<Tuple<string, float>>();
         if (image != null)
         {
             _imgByte = image;
             var result = _trainer.RunImage(image);
-            _out.Add(await OutputPrediction(result));
+            _out.Add(await OutputPrediction(result, captcha));
         }
         else
         {
@@ -92,10 +92,11 @@ public class services
     public async Task<Tuple<string, float, byte[], string>> Captcha()
     {
         var unknowns = LoadFromDirectory(Path.Combine(_path, "unknown"));
-        if (!unknowns.Any()) return new Tuple<string, float, byte[], string>("What did you do?", 404, Array.Empty<byte>(), "");
+        if (!unknowns.Any())
+            return new Tuple<string, float, byte[], string>("What did you do?", 404, Array.Empty<byte>(), "");
         var imageInfo = unknowns.First();
         var image = File.ReadAllBytes(imageInfo.ImagePath);
-        var result = await TestImage(image);
+        var result = await TestImage(image, true);
         return new Tuple<string, float, byte[], string>(result[0].Item1, result[0].Item2, image, imageInfo.ImagePath);
     }
 
@@ -105,12 +106,13 @@ public class services
         var imgPath = reply.Item2;
 
         var image = File.ReadAllBytes(imgPath);
-        var result = await TestImage(image);
-        if (result[0].Item2 < 33) return;
-        File.Move(imgPath, Path.Combine(_path,"train", classification));
+        var result = await TestImage(image, true);
+        if (result[0].Item2 < 32) return;
+        _imgGuid = Guid.NewGuid();
+        File.Move(imgPath, Path.Combine(_path, "train", classification, _imgGuid + ".jpg"));
     }
 
-    private async Task<Tuple<string, float>> OutputPrediction(ModelOutput prediction)
+    private async Task<Tuple<string, float>> OutputPrediction(ModelOutput prediction, bool captcha)
     {
         int scoreIndex = FindScoreIndex(prediction.PredictedLabel);
         var score = prediction.Score[scoreIndex] * 100;
@@ -119,17 +121,20 @@ public class services
 
         if (score < 75) // TODO is 75% too low? Should the limit be higher...?
         {
-            if (!string.IsNullOrWhiteSpace(prediction.ImagePath))
+            if (!captcha)
             {
-                File.Move(prediction.ImagePath, Path.Combine(_path, "unknown"));
-            }
-            else
-            {
-                var file = File.Create(string.IsNullOrWhiteSpace(imageName)
-                    ? Path.Combine(_path, "unknown", _imgGuid + ".jpg")
-                    : Path.Combine(_path, "unknown", imageName + ".jpg"));
-                await file.WriteAsync(_imgByte);
-                file.Close();
+                if (!string.IsNullOrWhiteSpace(prediction.ImagePath))
+                {
+                    File.Move(prediction.ImagePath, Path.Combine(_path, "unknown"));
+                }
+                else
+                {
+                    var file = File.Create(string.IsNullOrWhiteSpace(imageName)
+                        ? Path.Combine(_path, "unknown", _imgGuid + ".jpg")
+                        : Path.Combine(_path, "unknown", imageName + ".jpg"));
+                    await file.WriteAsync(_imgByte);
+                    file.Close();
+                }
             }
         }
 
@@ -171,6 +176,8 @@ public class services
             }
         }
 
-        return score > 74 ? new Tuple<string, float>(prediction.PredictedLabel, score) : new Tuple<string, float>($"Image not classified, closest match was {prediction.PredictedLabel}", score);
+        return score > 74
+            ? new Tuple<string, float>(prediction.PredictedLabel, score)
+            : new Tuple<string, float>($"Image not classified, closest match was {prediction.PredictedLabel}", score);
     }
 }
