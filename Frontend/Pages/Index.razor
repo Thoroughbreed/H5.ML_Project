@@ -1,9 +1,61 @@
 ﻿@page "/"
+@using Frontend.Constants
+@inject HttpClient _http
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Hello, non-AI sentinent being!</h1>
+<p>My name is Imagerecogniz-o-matic 2000. Please try and give me an image and let me guess what it is...</p>
+<h4>@responseString</h4>
+<p>@responseScore</p>
 
-Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+<InputFile OnChange="@InputImage" size="@int.MaxValue"/>
+<button class="btn btn-outline-success" @onclick="RunApi">Run, dammit!</button>
+
+<marquee direction="right"><pre><p font-family="consolas">@artwork</p></pre></marquee>
+
+@code
+{
+    private string responseString;
+    private string responseScore;
+    private string b64Img;
+    private string artwork;
+
+    
+
+    [CascadingParameter]
+    protected MainLayout MainLayout { get; set; }
+
+    private async void InputImage(InputFileChangeEventArgs e)
+    {
+        using (MemoryStream m = new MemoryStream())
+        {
+            await e.File.OpenReadStream(maxAllowedSize: int.MaxValue).CopyToAsync(m);
+            b64Img = Convert.ToBase64String(m.ToArray());
+        }
+        RunApi();
+    }
+
+    private async void RunApi()
+    {
+        var responseMessage = await _http.PostAsJsonAsync("/runimage", b64Img);
+        
+        var response = await responseMessage.Content.ReadFromJsonAsync<List<Tuple<string, float>>>();
+        responseString = $"The image you gave me is a .... {response.First().Item1}";
+        responseScore = $"I'm {response.First().Item2}% confident about it";
+
+        artwork = response.First().Item1 switch
+        {
+            "car" => AsciiArt.car,
+            "bike" => AsciiArt.bike,
+            _ => artwork
+            };
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var debug = await _http.GetStringAsync("/ctor");
+        responseString = debug;
+    }
+}
