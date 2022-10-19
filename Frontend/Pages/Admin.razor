@@ -5,12 +5,13 @@
 
 <input @bind-value="password" type="password"/>
 <button @onclick="ReTrain">Re-train model</button>
+<h4>@response</h4>
 
 @code {
     private string password;
     private string response;
 
-    async void ReTrain()
+    private async void ReTrain()
     {
         if (password != "kartoffel")
         {
