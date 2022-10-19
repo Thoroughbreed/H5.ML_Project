@@ -86,6 +86,7 @@ public class services
     {
         var number = LoadFromDirectory(Path.Combine(_path, "train")).Count();
         var current = _trainer.ControlData();
+        Console.WriteLine($"Old set: {current} \t| New set: {number}");
         return _trainer.ReTrain(number > current + 10) ? HttpStatusCode.Accepted : HttpStatusCode.FailedDependency;
     }
 

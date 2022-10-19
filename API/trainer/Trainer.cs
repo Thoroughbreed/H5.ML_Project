@@ -71,6 +71,7 @@ namespace API.trainer
         {
             if (!File.Exists(_dataPath + "model.mod") || forceTrain)
             {
+                Console.WriteLine("Starting goddamn training bro!");
                 var cOpt = new ImageClassificationTrainer.Options()
                 {
                     FeatureColumnName = "Image",

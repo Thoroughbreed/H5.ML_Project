@@ -12,7 +12,12 @@
 
     async void ReTrain()
     {
-        if (password != "kartoffel") return;
+        if (password != "kartoffel")
+        {
+            response = "Wrong password Nicolai!";
+            return;
+        }
+        response = "Password accepted ...";
         var res = await _http.GetAsync("/retrain");
         response = res.StatusCode.ToString();
 
