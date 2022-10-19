@@ -1,5 +1,4 @@
 using API.service;
-using API.trainer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +14,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// For debugging purposes :)
+app.UseCors(o =>
+{
+    o.AllowAnyHeader();
+    o.AllowAnyMethod();
+    o.AllowAnyOrigin();
+});
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

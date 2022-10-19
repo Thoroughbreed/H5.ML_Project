@@ -1,3 +1,4 @@
+using System.Net;
 using API.classes;
 using API.trainer;
 
@@ -81,10 +82,11 @@ public class services
         return _out;
     }
 
-    public void ReTrain()
+    public async Task<HttpStatusCode> ReTrain()
     {
         var number = LoadFromDirectory(Path.Combine(_path, "train")).Count();
-        _trainer.ControlData(number);
+        var current = _trainer.ControlData();
+        return _trainer.ReTrain(number > current + 10) ? HttpStatusCode.Accepted : HttpStatusCode.FailedDependency;
     }
 
     private async Task<Tuple<string, float>> OutputPrediction(ModelOutput prediction)

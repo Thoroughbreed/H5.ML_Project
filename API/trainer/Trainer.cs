@@ -31,11 +31,15 @@ namespace API.trainer
             }
         }
 
-        public void ControlData(int newNum)
+        public int ControlData()
         {
-            bool force = newNum > _setAmount + 10;
-            if (!force) return;
+            return _setAmount;
+        }
+
+        public bool ReTrain(bool force)
+        {
             TrainData(force);
+            return force;
         }
 
         public void LoadData(IEnumerable<ImageData> data, bool train = true)
