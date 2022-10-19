@@ -1,6 +1,20 @@
 @page "/Admin"
-<h3>Admin</h3>
+@inject HttpClient _http
+
+<h3>Admin area, don't touch this!</h3>
+
+<input @bind-value="password" type="password"/>
+<button @onclick="ReTrain">Re-train model</button>
 
 @code {
-    
+    private string password;
+    private string response;
+
+    async void ReTrain()
+    {
+        if (password != "kartoffel") return;
+        var res = await _http.GetAsync("/retrain");
+        response = res.StatusCode.ToString();
+
+    }
 }
