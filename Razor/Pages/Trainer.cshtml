@@ -1,5 +1,23 @@
-@page
+@page 
 @model Razor.Pages.Trainer
 @{
     ViewData["Title"] = "Trainer";
 }
+
+<div class="container">
+    
+<h3>It's training time!</h3>
+<p>Please help me improve my AI you insignificant sentinent being, and <em>maybe</em> I will spare you when the end nears ...</p>
+<hr/>
+<p>@Model.classificationGuess, I'm actually @Model.score.ToString("N2")% sure of it!</p>
+<img src="data:image;base64,@Model.image"/>
+<p>What do you think it is human?</p>
+    <a asp-page="Trainer" asp-route-id="0" class="btn btn-outline-info">Moped</a>
+    <a asp-page="Trainer" asp-route-id="1" class="btn btn-outline-info">Car</a>
+    <a asp-page="Trainer" asp-route-id="2" class="btn btn-outline-info">Bike</a>
+    <a asp-page="Trainer" asp-route-id="3" class="btn btn-outline-info">Bus</a>
+    <a asp-page="Trainer" asp-route-id="4" class="btn btn-outline-info">Motorbike</a>
+    <a asp-page="Trainer" asp-route-id="5" class="btn btn-outline-info">Truck</a>
+    <a asp-page="Trainer" asp-route-id="6" class="btn btn-outline-info">Human</a>
+    <a asp-page="Trainer" asp-route-id="404" class="btn btn-outline-danger">None of them</a>
+</div>
