@@ -37,13 +37,7 @@ app.MapGet("/retrain", (IServices service) => service.ReTrain());
 app.MapGet("/captcha", (IServices service) => service.Captcha());
 app.MapPost("/captcha", (IServices service, Tuple<string, string> reply) => service.CaptchaReturn(reply));
 
-<<<<<<< HEAD
-app.MapPost("/delete", (services _service, string path) => _service.DeleteWrong(path));
-
-app.MapPost("/runimage", async (services _service, byte[] image) => await _service.TestImage(image));
-=======
 app.MapPost("/delete", (IServices service, string path) => service.DeleteWrong(path));
->>>>>>> 5c52abccf612b616899b38f9e3ef945fa96467a8
 
 app.MapPost("/runimage", async (IServices service, byte[] image) => await service.TestImage(image));
 app.Run();

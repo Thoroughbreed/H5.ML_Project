@@ -199,21 +199,4 @@ public class Services : IServices
             ? new Tuple<string, float>(prediction.PredictedLabel, score)
             : new Tuple<string, float>($"Image not classified, closest match was {prediction.PredictedLabel}", score);
     }
-
-    public void DeleteWrong(string path)
-    {
-        if (path.EndsWith(".jpg") || path.EndsWith(".jpeg") || path.EndsWith(".png"))
-        {
-            Console.WriteLine($"Deleting {path}");
-            try
-            {
-                File.Delete(path);
-                Console.WriteLine("File gone poof...");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-    }
 }
