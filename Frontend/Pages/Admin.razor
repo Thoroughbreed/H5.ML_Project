@@ -1,0 +1,28 @@
+@page "/Admin"
+@using System.Net
+@inject HttpClient _http
+
+<h3>Admin area, don't touch this!</h3>
+
+<input @bind-value="password" type="password"/>
+<button @onclick="ReTrain">Re-train model</button>
+<h4>@response</h4>
+
+@code {
+    private string password;
+    private string response;
+
+    private async void ReTrain()
+    {
+        if (password != "kartoffel")
+        {
+            response = "Wrong password Nicolai!";
+            return;
+        }
+        response = "Password accepted ...";
+        var res = await _http.GetAsync("/retrain");
+        response = res.StatusCode.ToString();
+        var resCode = await res.Content.ReadAsStringAsync();
+        response = resCode;
+    }
+}

@@ -69,16 +69,25 @@ ML Project
 │   │   │───val         - Validation dataset
 │   │   └───unknown     - Unknown (captcha)
 │   │
+│   └───Interfaces
+│   │   └───IService.cs - Interface for the services used in the API
+│   │
 │   └───service
-│   │   │───Service.cs  - Image classification services
-│   │   └───IService.cs
+│   │   └───Service.cs  - Image classification services
 │   │
 │   └───trainer
-│       │───Tainer.cs   - Re-train (generation incrementer)
-│       └───ITrainer.cs
+│       └───Tainer.cs   - Model train engine (generation incrementer)
 │   
 └───Frontend
-    │   404
+    │───Program.cs
+    │───Constants
+    │   └───AsciiArt.cs - ASCII art for Nicolai aka Merlin
+    │
+    └───Pages
+        │───Admin       - Administrative area (retraining)
+        │───FAQ         - FAQ (link to this readme)
+        │───Index       - The Imagerecogniz-o-matic 2000 main page
+        └───Trainer     - A "Captcha" light, where you can help train the AI
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -104,19 +113,26 @@ ML Project
 | 0.1.2 | Edited deprecated methods, removed debugging method calls |
 | 0.1.3 | Removed "Test random image" endpoint | 
 | 0.2.0 | First iteration of the API done, and ready for testing |
+| 0.2.1 | Initial push of the Blazor SPA frontend |
+| 0.3.0 | Made changes in how the API returns when re-training (424 if conditions are not met, 202 if they are) |
+| 0.4.0 | Added two more endpoints to the API, captcha! (Looking at you Merlin) |
+| 0.4.1 | Frontend working together with API now like a charm |
+| 0.4.2 | Frontend completed, everything tested and working. Input only accepts images now |
+| 0.4.3 | Added deletion endpoint in API |
+| 0.5.0 | Code refactoring done, interfaces done, first release ready for production testing |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Roadmap
 - [X] Gather enough data (and sanitize it)
-- [X ] Generate the machine model and verify the accuracy of it (30% confidence is my minimum as PoC)
+- [X] Generate the machine model and verify the accuracy of it (30% confidence is my minimum as PoC)
 - [ ] ~~Create the logic behind the object recognition~~
 - [X] Test the logic, and see if it is accurate/satisfying enough
   - [X] Test the identification logic (is it a person, a car, a bike, a tree or other?)
-  - [ ] Test the re-train logic to see if we can make it more accurate over time
-  - [ ] Test the fail-safe logic, avoiding trolls (an image of a flower marked as a car)
-- [ ] Create frontend
-  - [ ] Console all-in-one *(smoke test)*
-  - [X] Razor + WebAPI returning a string/JSON
+  - [X] Test the re-train logic to see if we can make it more accurate over time
+  - [X] Test the fail-safe logic, avoiding trolls (an image of a flower marked as a car)
+- [X] Create frontend
+  - [ ] ~~Console all-in-one *(smoke test)*~~
+  - [X] Blazor + WebAPI returning a Tuple/JSON
   - [ ] ~~Razor + WebAPI returning an image with the identified objects *(marked on the original image)*~~
   - [ ] ~~Razor + WebAPI returning an array of images with each of the identified objects cropped out of the original image~~
 <p align="right">(<a href="#top">back to top</a>)</p>
