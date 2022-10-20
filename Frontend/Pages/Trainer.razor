@@ -41,11 +41,25 @@
 
     private async void LoadData()
     {
-        var reply = await _http.GetFromJsonAsync<Tuple<string, float, string, string>>("captcha");
-        classificationGuess = reply.Item1;
-        score = reply.Item2;
-        image = reply.Item3;
-        path = reply.Item4;
-        StateHasChanged();
+        try
+        {
+            var reply = await _http.GetFromJsonAsync<Tuple<string, float, string, string>>("captcha");
+            if (reply == null)
+            {
+                classificationGuess = "No images are waiting to be evaluated by a sentient being like you.";
+                StateHasChanged();
+                return;
+            }
+            classificationGuess = reply.Item1;
+            score = reply.Item2;
+            image = reply.Item3;
+            path = reply.Item4;
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            classificationGuess = "It kinda looks like the API isn't running ... weird?!";
+        }
+        
     }
 }

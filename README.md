@@ -78,16 +78,19 @@ ML Project
 │   └───trainer
 │       └───Tainer.cs   - Model train engine (generation incrementer)
 │   
-└───Frontend
-    │───Program.cs
-    │───Constants
-    │   └───AsciiArt.cs - ASCII art for Nicolai aka Merlin
-    │
-    └───Pages
-        │───Admin       - Administrative area (retraining)
-        │───FAQ         - FAQ (link to this readme)
-        │───Index       - The Imagerecogniz-o-matic 2000 main page
-        └───Trainer     - A "Captcha" light, where you can help train the AI
+│───Frontend
+│   │───Program.cs
+│   │───Constants
+│   │   └───AsciiArt.cs - ASCII art for Nicolai aka Merlin
+│   │
+│   └───Pages
+│       │───Admin       - Administrative area (retraining)
+│       │───FAQ         - FAQ (link to this readme)
+│       │───Index       - The Imagerecogniz-o-matic 2000 main page
+│       └───Trainer     - A "Captcha" light, where you can help train the AI
+│
+└───Razor
+│   │───Program.cs
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -132,6 +135,9 @@ The frontend is simply just a Blazor WASM that requests images from the API or s
 | 0.5.1 | Typo change |
 | 0.5.2 | Forgot to implement the interface correctly in the API |
 | 0.5.3 | Added a "refresh" function to the frontend/Index and removed the button |
+| 0.5.4 | Changed arch in the API when training a new model (runs on server now) |
+| 0.5.5 | Fixed a null ref error in the front-end when no images are in the "unknown" folder |
+| 0.6.0 | Added a Razor frontend to be able to isolate API |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Roadmap
@@ -147,6 +153,7 @@ The frontend is simply just a Blazor WASM that requests images from the API or s
   - [X] Blazor + WebAPI returning a Tuple/JSON
   - [ ] ~~Razor + WebAPI returning an image with the identified objects *(marked on the original image)*~~
   - [ ] ~~Razor + WebAPI returning an array of images with each of the identified objects cropped out of the original image~~
+  - [ ] Bonus - Razor frontend (I decided to go that way because the API could be left unexposed to the WWW)
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## NuGet packs
@@ -160,9 +167,10 @@ The frontend is simply just a Blazor WASM that requests images from the API or s
 | Net.Http.Headers | 2.2.8 | Frontend |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## License
+### License
 * API: GPLv3
 * Frontend: GPLv3
+* Razor: GPLv3
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Contact
