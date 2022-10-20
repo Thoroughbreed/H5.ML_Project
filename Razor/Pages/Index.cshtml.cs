@@ -32,6 +32,23 @@ public class IndexModel : PageModel
             await Image.OpenReadStream().CopyToAsync(m);
             b64Img = Convert.ToBase64String(m.ToArray());
         }
+
+        await RunApi();
         return Page();
+    }
+    private async Task RunApi()
+    {
+        var responseMessage = await _client.PostAsJsonAsync("/runimage", b64Img);
+
+        var response = await responseMessage.Content.ReadFromJsonAsync<List<Tuple<string, float>>>();
+        if (response.First().Item2 > 75)
+        {
+            responseString = $"The image you gave me is a .... {response.First().Item1}";
+        }
+        else
+        {
+            responseString = response.First().Item1 + " - You could help me tho, take a look at training over in the menu on the left.";
+        }
+        responseScore = $"I'm {response.First().Item2}% confident about it";
     }
 }
