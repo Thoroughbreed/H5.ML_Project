@@ -20,12 +20,12 @@
     <li>
       <a href="#project-overview">Project Overview</a>
       <ul>
-        <li><a href="#application-layout">Application Layout</a></li>
-        <li><a href="#uml">UML diagram</a></li>
+        <li><a href="#api-endpoints">API Endpoints</a></li>
       </ul>
     </li>
     <li><a href="#changelog">Changelog</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#nuget-packs">NuGet packs</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -93,12 +93,20 @@ ML Project
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Project overview
+The project is a two-layer solution consisting of an API backend and a Blazor WASM frontend.
+
+The API serves as a pipeline from a given frontend to the ML.Net backend, receiving and dealing images and guesstimates back and forth.
+The frontend is simply just a Blazor WASM that requests images from the API or serves an image to the API to receive a guess.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Application layout
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-### UML
+### API Endpoints
+| Method | Endpoints | Return/accepts | What does it do? |
+| GET | / | String (smoke test) | See if API is working |
+| GET | /ctor | String | Ensures that the service is running |
+| GET | /captcha | Tuple<string, float, byte[], string> | Returns an image as byte along with the AI's initial guess |
+| POST | /captcha | Tuple<string, string> | Takes the answer from the human and takes the label into consideration |
+| POST | /delete | String | Deletes an image if the human thinks that it is completely nonsense |
+| POST | /runimage | byte[] / Tuple<string, float> | The key of the entire AI - receives an image and returns it's guess including the score as a float |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Changelog
@@ -120,6 +128,9 @@ ML Project
 | 0.4.2 | Frontend completed, everything tested and working. Input only accepts images now |
 | 0.4.3 | Added deletion endpoint in API |
 | 0.5.0 | Code refactoring done, interfaces done, first release ready for production testing |
+| 0.5.1 | Typo change |
+| 0.5.2 | Forgot to implement the interface correctly in the API |
+| 0.5.3 | Added a "refresh" function to the frontend/Index and removed the button |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Roadmap
@@ -137,10 +148,20 @@ ML Project
   - [ ] ~~Razor + WebAPI returning an array of images with each of the identified objects cropped out of the original image~~
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### License
-* Software: GPLv3
+### NuGet packs
+| Name | Version | Location |
+| ML.ImageAnalytics | 1.7.1 | API |
+| ML.Vision | 1.7.1 | API |
+| TensorFlow.Redist | 2.3.1 | API |
+| AspNetCore | 6.2.3 | API |
+| Extensions.Features | 6.0.10 | Frontend |
+| Net.Http.Headers | 2.2.8 | Frontend |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+### License
+* API: GPLv3
+* Frontend: GPLv3
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Contact
 Jan Andreasen - jan@tved.it

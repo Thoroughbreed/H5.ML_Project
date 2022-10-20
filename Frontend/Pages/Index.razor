@@ -20,7 +20,6 @@
     <hr/>
     
     <InputFile OnChange="@InputImage" size="@int.MaxValue" accept="image/*"/>
-    <button class="btn btn-outline-success" @onclick="RunApi">Run, dammit!</button>
 
     <!-- If I get time Nicolai ... if I get time -->
     @* <marquee direction="right"> *@
@@ -69,7 +68,8 @@
             "car" => AsciiArt.car,
             "bike" => AsciiArt.bike,
             _ => artwork
-            };
+        };
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync()
