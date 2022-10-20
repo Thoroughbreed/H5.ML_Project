@@ -4,3 +4,11 @@
     ViewData["Title"] = "Top secret admin area";
 }
 
+<h3>Admin area, don't touch this!</h3>
+
+<form method="post">
+    <input asp-for="Password" type="password"/>
+    <button class="btn btn-outline-warning">Re-train model</button>
+</form>
+<h4>@Model.Response</h4>
+
