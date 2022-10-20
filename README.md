@@ -168,6 +168,7 @@ The frontend is simply just a Blazor WASM that requests images from the API or s
 ### License
 * API: GPLv3
 * Frontend: GPLv3
+* Razor: GPLv3
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Contact
