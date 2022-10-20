@@ -117,6 +117,7 @@ ML Project
 | 0.4.0 | Added two more endpoints to the API, captcha! (Looking at you Merlin) |
 | 0.4.1 | Frontend working together with API now like a charm |
 | 0.4.2 | Frontend completed, everything tested and working. Input only accepts images now |
+| 0.4.3 | Added deletion endpoint in API |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Roadmap

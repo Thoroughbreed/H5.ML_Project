@@ -37,6 +37,8 @@ app.MapGet("/retrain", (services _service) => _service.ReTrain());
 app.MapGet("/captcha", (services _service) => _service.Captcha());
 app.MapPost("/captcha", (services _service, Tuple<string, string> reply) => _service.CaptchaReturn(reply));
 
+app.MapPost("/delete", (services _service, string path) => _service.DeleteWrong(path));
+
 app.MapPost("/runimage", async (services _service, byte[] image) => await _service.TestImage(image));
 
 app.Run();
