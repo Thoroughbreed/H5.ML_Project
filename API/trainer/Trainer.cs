@@ -6,14 +6,15 @@ namespace API.trainer
 {
     public class Trainer
     {
-        private IDataView? _imageData { get; set; }
-        private string _dataPath { get; set; }
-        private MLContext _context { get; set; }
-        private IDataView? _trainSet { get; set; }
-        private IDataView? _validationSet { get; set; }
+        private readonly string _dataPath;
+        private readonly MLContext _context;
+        private bool _training;
+        private IDataView? ImageData { get; set; }
+        private IDataView? TrainSet { get; set; }
+        private IDataView? ValidationSet { get; set; }
         private ITransformer? TrainedModel { get; set; }
-        private int _setAmount { get; set; }
-        private int _generation { get; set; }
+        private int SetAmount { get; set; }
+        private int Generation { get; set; }
 
 
         public Trainer(string dataPath)
@@ -26,14 +27,14 @@ namespace API.trainer
                 int i = 0;
                 if (ex != ".i") continue;
                 int.TryParse(new FileInfo(file).Name.Split('.')[0], out i);
-                _generation = i;
+                Generation = i;
                 break;
             }
         }
 
         public int ControlData()
         {
-            return _setAmount;
+            return SetAmount;
         }
 
         public bool ReTrain(bool force)
@@ -44,24 +45,24 @@ namespace API.trainer
 
         public void LoadData(IEnumerable<ImageData> data, bool train = true)
         {
-            _imageData = _context.Data.LoadFromEnumerable(data);
+            ImageData = _context.Data.LoadFromEnumerable(data);
 
             var preprocessingPipeline = _context.Transforms.Conversion
                 .MapValueToKey("LabelAsKey", "Label")
                 .Append(_context.Transforms.LoadRawImageBytes("Image", _dataPath, "ImagePath"));
-            IDataView shuffledData = _context.Data.ShuffleRows(_imageData);
+            IDataView shuffledData = _context.Data.ShuffleRows(ImageData);
 
             switch (train)
             {
                 case true:
                 {
-                    _setAmount = data.Count();
-                    _trainSet = preprocessingPipeline.Fit(shuffledData).Transform(shuffledData);
+                    SetAmount = data.Count();
+                    TrainSet = preprocessingPipeline.Fit(shuffledData).Transform(shuffledData);
                     break;
                 }
                 case false:
                 {
-                    _validationSet = preprocessingPipeline.Fit(shuffledData).Transform(shuffledData);
+                    ValidationSet = preprocessingPipeline.Fit(shuffledData).Transform(shuffledData);
                     break;
                 }
             }
@@ -71,26 +72,7 @@ namespace API.trainer
         {
             if (!File.Exists(_dataPath + "model.mod") || forceTrain)
             {
-                Console.WriteLine("Starting goddamn training bro!");
-                var cOpt = new ImageClassificationTrainer.Options()
-                {
-                    FeatureColumnName = "Image",
-                    LabelColumnName = "LabelAsKey",
-                    ValidationSet = _validationSet,
-                    // Arch = ImageClassificationTrainer.Architecture.ResnetV2101,
-                    Arch = ImageClassificationTrainer.Architecture.ResnetV250,
-                    MetricsCallback = (metrics) => Console.WriteLine(metrics),
-                    TestOnTrainSet = false,
-                    ReuseTrainSetBottleneckCachedValues = true,
-                    ReuseValidationSetBottleneckCachedValues = true
-                };
-
-                var trainingPipeline = _context.MulticlassClassification.Trainers
-                    .ImageClassification(cOpt)
-                    .Append(_context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
-
-                TrainedModel = trainingPipeline.Fit(_trainSet); // Start the damn training!
-                Save();
+                Task.Run(TrainNow);
             }
             else
             {
@@ -98,13 +80,41 @@ namespace API.trainer
             }
         }
 
+        private void TrainNow()
+        {
+            if (_training) return;
+            _training = true;
+            Console.WriteLine("Starting goddamn training bro!");
+            var cOpt = new ImageClassificationTrainer.Options()
+            {
+                FeatureColumnName = "Image",
+                LabelColumnName = "LabelAsKey",
+                ValidationSet = ValidationSet,
+                // Arch = ImageClassificationTrainer.Architecture.ResnetV2101,
+                Arch = ImageClassificationTrainer.Architecture.ResnetV250,
+                MetricsCallback = (metrics) => Console.WriteLine(metrics),
+                TestOnTrainSet = false,
+                ReuseTrainSetBottleneckCachedValues = true,
+                ReuseValidationSetBottleneckCachedValues = true
+            };
+
+            var trainingPipeline = _context.MulticlassClassification.Trainers
+                .ImageClassification(cOpt)
+                .Append(_context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+
+            TrainedModel = trainingPipeline.Fit(TrainSet); // Start the damn training!
+            Console.WriteLine("Training completed ... saving new generation");
+            Save();
+            _training = false;
+        }
+
         private void Save()
         {
-            _generation++;
-            var i = _generation;
+            Generation++;
+            var i = Generation;
             File.Create(_dataPath + $"/{i}.i");
             File.Copy(_dataPath + "model.mod", _dataPath + $"gen{i}.mod");
-            _context.Model.Save(TrainedModel, _trainSet.Schema, _dataPath + "model.mod");
+            _context.Model.Save(TrainedModel, TrainSet.Schema, _dataPath + "model.mod");
         }
 
         public ModelOutput RunImage(byte[] img)
@@ -114,27 +124,5 @@ namespace API.trainer
                 _context.Model.CreatePredictionEngine<ModelInput, ModelOutput>(TrainedModel);
             return pEngine.Predict(image);
         }
-        /// <summary>
-        /// Deprecated - was used for debugging purposes
-        /// Took 10 random pictures and tried to classify them.
-        /// </summary>
-        /// <returns>List containing the predictions</returns>
-        private List<ModelOutput> RunMultipleImage()
-        {
-            PredictionEngine<ModelInput, ModelOutput> pEngine =
-                _context.Model.CreatePredictionEngine<ModelInput, ModelOutput>(TrainedModel);
-            var predictions = _context.Data.CreateEnumerable<ModelInput>(_validationSet, reuseRowObject: true).Take(10);
-
-            var output = new List<ModelOutput>();
-            foreach (var item in predictions)
-            {
-                var debug = item.LabelAsKey;
-                ModelOutput prediction = pEngine.Predict(item);
-                output.Add(prediction);
-            }
-
-            return output;
-        }
-
     }
 }
