@@ -76,7 +76,7 @@
     {
         try
         {
-            var httpResponse = await _http.GetAsync("ctor");
+            var httpResponse = await _http.GetAsync("/ctor");
             errorInApi = false;
             responseString = httpResponse.StatusCode switch
             {

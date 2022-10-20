@@ -131,6 +131,8 @@ The frontend is simply just a Blazor WASM that requests images from the API or s
 | 0.5.1 | Typo change |
 | 0.5.2 | Forgot to implement the interface correctly in the API |
 | 0.5.3 | Added a "refresh" function to the frontend/Index and removed the button |
+| 0.5.4 | Changed arch in the API when training a new model (runs on server now) |
+| 0.5.5 | Fixed a null ref error in the front-end when no images are in the "unknown" folder |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Roadmap

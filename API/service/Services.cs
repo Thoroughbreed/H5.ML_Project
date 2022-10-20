@@ -65,7 +65,7 @@ public class Services : IServices
 
         var image = await File.ReadAllBytesAsync(imgPath);
         var result = await TestImage(image, true);
-        if (result[0].Item2 < 32) return;
+        // if (result[0].Item2 < 32) return;
         _imgGuid = Guid.NewGuid();
         File.Move(imgPath, Path.Combine(_path, "train", classification, _imgGuid + ".jpg"));
     }
