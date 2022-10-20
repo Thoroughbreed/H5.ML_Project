@@ -78,16 +78,19 @@ ML Project
 │   └───trainer
 │       └───Tainer.cs   - Model train engine (generation incrementer)
 │   
-└───Frontend
-    │───Program.cs
-    │───Constants
-    │   └───AsciiArt.cs - ASCII art for Nicolai aka Merlin
-    │
-    └───Pages
-        │───Admin       - Administrative area (retraining)
-        │───FAQ         - FAQ (link to this readme)
-        │───Index       - The Imagerecogniz-o-matic 2000 main page
-        └───Trainer     - A "Captcha" light, where you can help train the AI
+│───Frontend
+│   │───Program.cs
+│   │───Constants
+│   │   └───AsciiArt.cs - ASCII art for Nicolai aka Merlin
+│   │
+│   └───Pages
+│       │───Admin       - Administrative area (retraining)
+│       │───FAQ         - FAQ (link to this readme)
+│       │───Index       - The Imagerecogniz-o-matic 2000 main page
+│       └───Trainer     - A "Captcha" light, where you can help train the AI
+│
+└───Razor
+│   │───Program.cs
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -148,6 +151,7 @@ The frontend is simply just a Blazor WASM that requests images from the API or s
   - [X] Blazor + WebAPI returning a Tuple/JSON
   - [ ] ~~Razor + WebAPI returning an image with the identified objects *(marked on the original image)*~~
   - [ ] ~~Razor + WebAPI returning an array of images with each of the identified objects cropped out of the original image~~
+  - [ ] Bonus - Razor frontend (I decided to go that way because the API could be left unexposed to the WWW)
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### NuGet packs

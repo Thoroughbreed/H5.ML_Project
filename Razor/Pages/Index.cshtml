@@ -1,0 +1,27 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Imagerecogniz-o-matic 2000";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Imagerecogniz-o-matic 2000</h1>
+    
+    <p>My name is Imagerecogniz-o-matic 2000. Please try and give me an image and let me guess what it is...</p>
+    <hr/>
+    <h4>@Model.responseString</h4>
+    @if (!Model.errorInApi)
+    {
+        <p>@Model.responseScore</p>
+        <br/>
+        @if (!string.IsNullOrWhiteSpace(Model.b64Img))
+        {
+        <img src="data:image;base64,@Model.b64Img"/>
+        }
+        <hr/>
+        <form method="post" enctype="multipart/form-data">
+            <input class="btn btn-outline-info" type="file" asp-for="Image" accept="image/*"/>
+            <button type="submit" class="btn btn-info">Run dammit!</button>
+        </form>
+    }
+</div>
