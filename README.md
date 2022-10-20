@@ -14,7 +14,7 @@
       <a href="#summary">Summary</a>
       <ul>
         <li><a href="#case">Case</a></li>
-	      <li><a href="#project-structure">Project Structure</a></li>
+	<li><a href="#project-structure">Project Structure</a></li>
       </ul>
     </li>
     <li>
@@ -104,6 +104,7 @@ The frontend is simply just a Blazor WASM that requests images from the API or s
 
 ### API Endpoints
 | Method | Endpoints | Return/accepts | What does it do? |
+|-|-|-|-|
 | GET | / | String (smoke test) | See if API is working |
 | GET | /ctor | String | Ensures that the service is running |
 | GET | /captcha | Tuple<string, float, byte[], string> | Returns an image as byte along with the AI's initial guess |
@@ -112,7 +113,7 @@ The frontend is simply just a Blazor WASM that requests images from the API or s
 | POST | /runimage | byte[] / Tuple<string, float> | The key of the entire AI - receives an image and returns it's guess including the score as a float |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Changelog
+## Changelog
 | Version | Change |
 |-|-|
 | 0.0.0 | Project |
@@ -139,7 +140,7 @@ The frontend is simply just a Blazor WASM that requests images from the API or s
 | 0.6.0 | Added a Razor frontend to be able to isolate API |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Roadmap
+## Roadmap
 - [X] Gather enough data (and sanitize it)
 - [X] Generate the machine model and verify the accuracy of it (30% confidence is my minimum as PoC)
 - [ ] ~~Create the logic behind the object recognition~~
@@ -155,8 +156,9 @@ The frontend is simply just a Blazor WASM that requests images from the API or s
   - [ ] Bonus - Razor frontend (I decided to go that way because the API could be left unexposed to the WWW)
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### NuGet packs
+## NuGet packs
 | Name | Version | Location |
+|-|-|-|
 | ML.ImageAnalytics | 1.7.1 | API |
 | ML.Vision | 1.7.1 | API |
 | TensorFlow.Redist | 2.3.1 | API |
@@ -171,7 +173,7 @@ The frontend is simply just a Blazor WASM that requests images from the API or s
 * Razor: GPLv3
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Contact
+## Contact
 Jan Andreasen - jan@tved.it
 
 [![Twitter][twitter-shield]][twitter-url]
