@@ -78,7 +78,15 @@ ML Project
 │       └───ITrainer.cs
 │   
 └───Frontend
-    │   404
+    │───Program.cs
+    │───Constants
+    │   └───AsciiArt.cs - ASCII art for Nicolai aka Merlin
+    │
+    └───Pages
+        │───Admin       - Administrative area (retraining)
+        │───FAQ         - FAQ (link to this readme)
+        │───Index       - The Imagerecogniz-o-matic 2000 main page
+        └───Trainer     - A "Captcha" light, where you can help train the AI
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -104,10 +112,11 @@ ML Project
 | 0.1.2 | Edited deprecated methods, removed debugging method calls |
 | 0.1.3 | Removed "Test random image" endpoint | 
 | 0.2.0 | First iteration of the API done, and ready for testing |
-| 0.2.1 | Initial push of the Blazor SPA frontend
-| 0.3.0 | Made changes in how the API returns when re-training (424 if conditions are not met, 202 if they are)
-| 0.4.0 | Added two more endpoints to the API, captcha! (Looking at you Merlin)
-| 0.4.1 | Frontend working together with API now like a charm
+| 0.2.1 | Initial push of the Blazor SPA frontend |
+| 0.3.0 | Made changes in how the API returns when re-training (424 if conditions are not met, 202 if they are) |
+| 0.4.0 | Added two more endpoints to the API, captcha! (Looking at you Merlin) |
+| 0.4.1 | Frontend working together with API now like a charm |
+| 0.4.2 | Frontend completed, everything tested and working. Input only accepts images now |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Roadmap
@@ -119,7 +128,7 @@ ML Project
   - [X] Test the re-train logic to see if we can make it more accurate over time
   - [X] Test the fail-safe logic, avoiding trolls (an image of a flower marked as a car)
 - [ ] Create frontend
-  - [ ] Console all-in-one *(smoke test)*
+  - [ ] ~~Console all-in-one *(smoke test)*~~
   - [X] Blazor + WebAPI returning a string/JSON
   - [ ] ~~Razor + WebAPI returning an image with the identified objects *(marked on the original image)*~~
   - [ ] ~~Razor + WebAPI returning an array of images with each of the identified objects cropped out of the original image~~
