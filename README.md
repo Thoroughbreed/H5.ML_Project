@@ -69,13 +69,14 @@ ML Project
 │   │   │───val         - Validation dataset
 │   │   └───unknown     - Unknown (captcha)
 │   │
+│   └───Interfaces
+│   │   └───IService.cs - Interface for the services used in the API
+│   │
 │   └───service
-│   │   │───Service.cs  - Image classification services
-│   │   └───IService.cs
+│   │   └───Service.cs  - Image classification services
 │   │
 │   └───trainer
-│       │───Tainer.cs   - Re-train (generation incrementer)
-│       └───ITrainer.cs
+│       └───Tainer.cs   - Model train engine (generation incrementer)
 │   
 └───Frontend
     │───Program.cs
@@ -118,6 +119,7 @@ ML Project
 | 0.4.1 | Frontend working together with API now like a charm |
 | 0.4.2 | Frontend completed, everything tested and working. Input only accepts images now |
 | 0.4.3 | Added deletion endpoint in API |
+| 0.5.0 | Code refactoring done, interfaces done, first release ready for production testing |
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Roadmap
@@ -128,9 +130,9 @@ ML Project
   - [X] Test the identification logic (is it a person, a car, a bike, a tree or other?)
   - [X] Test the re-train logic to see if we can make it more accurate over time
   - [X] Test the fail-safe logic, avoiding trolls (an image of a flower marked as a car)
-- [ ] Create frontend
+- [X] Create frontend
   - [ ] ~~Console all-in-one *(smoke test)*~~
-  - [X] Blazor + WebAPI returning a string/JSON
+  - [X] Blazor + WebAPI returning a Tuple/JSON
   - [ ] ~~Razor + WebAPI returning an image with the identified objects *(marked on the original image)*~~
   - [ ] ~~Razor + WebAPI returning an array of images with each of the identified objects cropped out of the original image~~
 <p align="right">(<a href="#top">back to top</a>)</p>
