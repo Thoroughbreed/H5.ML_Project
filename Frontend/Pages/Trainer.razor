@@ -13,6 +13,7 @@
 <button class="btn btn-outline-info" @onclick="_ => GetClassification(4)">Motorbike</button>
 <button class="btn btn-outline-info" @onclick="_ => GetClassification(5)">Truck</button>
 <button class="btn btn-outline-info" @onclick="_ => GetClassification(6)">Human</button>
+<button class="btn btn-outline-danger" @onclick="_ => GetClassification(404)">None of them</button>
 @code {
 
     private float score;
@@ -24,17 +25,27 @@
 
     protected override async Task OnInitializedAsync()
     {
+        LoadData();
+    }
+
+    private async void GetClassification(int id)
+    {
+        if (id == 404)
+        {
+            await _http.PostAsJsonAsync("delete", path);
+        }
+        classificationHuman = classifications[id];
+        await _http.PostAsJsonAsync("captcha", new Tuple<string, string>(classificationHuman,path));
+        LoadData();
+    }
+
+    private async void LoadData()
+    {
         var reply = await _http.GetFromJsonAsync<Tuple<string, float, string, string>>("captcha");
         classificationGuess = reply.Item1;
         score = reply.Item2;
         image = reply.Item3;
         path = reply.Item4;
-    }
-
-    private async void GetClassification(int id)
-    {
-        classificationHuman = classifications[id];
-        await _http.PostAsJsonAsync("captcha", new Tuple<string, string>(classificationHuman,path));
-        // await OnInitializedAsync();
+        StateHasChanged();
     }
 }

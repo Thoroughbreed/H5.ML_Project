@@ -1,19 +1,32 @@
 ﻿@page "/"
 @using Frontend.Constants
+@using System.Net
 @inject HttpClient _http
 
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, non-AI sentinent being!</h1>
 <p>My name is Imagerecogniz-o-matic 2000. Please try and give me an image and let me guess what it is...</p>
+<hr/>
 <h4>@responseString</h4>
-<p>@responseScore</p>
+@if (!errorInApi)
+{
+    <p>@responseScore</p>
+    <br/>
+    @if (!string.IsNullOrWhiteSpace(b64Img))
+    {
+    <img src="data:image;base64,@b64Img"/>
+    }
+    <hr/>
+    
+    <InputFile OnChange="@InputImage" size="@int.MaxValue" accept="image/*"/>
+    <button class="btn btn-outline-success" @onclick="RunApi">Run, dammit!</button>
 
-
-<InputFile OnChange="@InputImage" size="@int.MaxValue"/>
-<button class="btn btn-outline-success" @onclick="RunApi">Run, dammit!</button>
-
-<marquee direction="right"><pre><p font-family="consolas">@artwork</p></pre></marquee>
+    <!-- If I get time Nicolai ... if I get time -->
+    @* <marquee direction="right"> *@
+    @*     <pre><p font-family="consolas">@artwork</p></pre> *@
+    @* </marquee> *@
+}
 
 @code
 {
@@ -21,8 +34,7 @@
     private string responseScore;
     private string b64Img;
     private string artwork;
-
-    
+    private bool errorInApi;
 
     [CascadingParameter]
     protected MainLayout MainLayout { get; set; }
@@ -40,9 +52,16 @@
     private async void RunApi()
     {
         var responseMessage = await _http.PostAsJsonAsync("/runimage", b64Img);
-        
+
         var response = await responseMessage.Content.ReadFromJsonAsync<List<Tuple<string, float>>>();
-        responseString = $"The image you gave me is a .... {response.First().Item1}";
+        if (response.First().Item2 > 75)
+        {
+            responseString = $"The image you gave me is a .... {response.First().Item1}";
+        }
+        else
+        {
+            responseString = response.First().Item1 + " - You could help me tho, take a look at training over in the menu on the left.";
+        }
         responseScore = $"I'm {response.First().Item2}% confident about it";
 
         artwork = response.First().Item1 switch
@@ -55,7 +74,23 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var debug = await _http.GetStringAsync("/ctor");
-        responseString = debug;
+        try
+        {
+            var httpResponse = await _http.GetAsync("ctor");
+            errorInApi = false;
+            responseString = httpResponse.StatusCode switch
+            {
+                HttpStatusCode.OK => await _http.GetStringAsync("/ctor"),
+                HttpStatusCode.BadRequest => "You did a bad request - you bad human!",
+                HttpStatusCode.NotFound => "I couldn't find the droid I was looking for, maybe my API isn't running?",
+                HttpStatusCode.MethodNotAllowed => "I'm sorry dave, I cannot let you do that ...",
+                _ => responseString = "You shouldn't even be able to see this?! Begone human!"
+                };
+        }
+        catch (Exception e)
+        {
+            responseString = "I couldn't find the droid I was looking for, maybe my API isn't running?";
+            errorInApi = true;
+        }
     }
 }
