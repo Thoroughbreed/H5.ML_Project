@@ -107,6 +107,7 @@ ML Project
 | 0.2.1 | Initial push of the Blazor SPA frontend
 | 0.3.0 | Made changes in how the API returns when re-training (424 if conditions are not met, 202 if they are)
 | 0.4.0 | Added two more endpoints to the API, captcha! (Looking at you Merlin)
+| 0.4.1 | Frontend working together with API now like a charm
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Roadmap
@@ -115,8 +116,8 @@ ML Project
 - [ ] ~~Create the logic behind the object recognition~~
 - [X] Test the logic, and see if it is accurate/satisfying enough
   - [X] Test the identification logic (is it a person, a car, a bike, a tree or other?)
-  - [ ] Test the re-train logic to see if we can make it more accurate over time
-  - [ ] Test the fail-safe logic, avoiding trolls (an image of a flower marked as a car)
+  - [X] Test the re-train logic to see if we can make it more accurate over time
+  - [X] Test the fail-safe logic, avoiding trolls (an image of a flower marked as a car)
 - [ ] Create frontend
   - [ ] Console all-in-one *(smoke test)*
   - [X] Blazor + WebAPI returning a string/JSON
