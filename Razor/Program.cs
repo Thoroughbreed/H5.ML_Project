@@ -2,8 +2,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+// builder.Services.AddScoped(sp => 
+//     new HttpClient { BaseAddress = new Uri("http://62.66.208.26:8089") });
 builder.Services.AddScoped(sp => 
-    new HttpClient { BaseAddress = new Uri("http://62.66.208.26:8089") });
+    new HttpClient { BaseAddress = new Uri("https://192.168.2.10:7258") });
 
 // REMEMBER TO ADD THIS TO JSON
 // ;https://192.168.2.10:7175
