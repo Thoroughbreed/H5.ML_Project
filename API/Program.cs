@@ -1,11 +1,12 @@
 using API.Interfaces;
+using API.service;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IServices>();
+builder.Services.AddSingleton<IServices, Services>();
 
 var app = builder.Build();
 
