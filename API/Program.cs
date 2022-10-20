@@ -1,11 +1,11 @@
-using API.service;
+using API.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<services>();
+builder.Services.AddSingleton<IServices>();
 
 var app = builder.Build();
 
@@ -30,15 +30,14 @@ app.MapControllers();
 
 app.MapGet("/", () => "HELL ....");
 
-app.MapGet("/ctor", (services _service) => "I'm ready milord");
+app.MapGet("/ctor", (IServices service) => "I'm ready milord"); // Starts the IService when the API starts - required :)
 
-app.MapGet("/retrain", (services _service) => _service.ReTrain());
+app.MapGet("/retrain", (IServices service) => service.ReTrain());
 
-app.MapGet("/captcha", (services _service) => _service.Captcha());
-app.MapPost("/captcha", (services _service, Tuple<string, string> reply) => _service.CaptchaReturn(reply));
+app.MapGet("/captcha", (IServices service) => service.Captcha());
+app.MapPost("/captcha", (IServices service, Tuple<string, string> reply) => service.CaptchaReturn(reply));
 
-app.MapPost("/delete", (services _service, string path) => _service.DeleteWrong(path));
+app.MapPost("/delete", (IServices service, string path) => service.DeleteWrong(path));
 
-app.MapPost("/runimage", async (services _service, byte[] image) => await _service.TestImage(image));
-
+app.MapPost("/runimage", async (IServices service, byte[] image) => await service.TestImage(image));
 app.Run();

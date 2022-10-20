@@ -17,33 +17,32 @@ namespace API.trainer
         private int Generation { get; set; }
 
 
-        public Trainer(string dataPath)
+        protected internal Trainer(string dataPath)
         {
             _dataPath = dataPath;
             _context = new MLContext();
             foreach (var file in Directory.GetFiles(_dataPath, "*.i", searchOption: SearchOption.TopDirectoryOnly))
             {
                 var ex = Path.GetExtension(file);
-                int i = 0;
                 if (ex != ".i") continue;
-                int.TryParse(new FileInfo(file).Name.Split('.')[0], out i);
+                int.TryParse(new FileInfo(file).Name.Split('.')[0], out int i);
                 Generation = i;
                 break;
             }
         }
 
-        public int ControlData()
+        protected internal int ControlData()
         {
             return SetAmount;
         }
 
-        public bool ReTrain(bool force)
+        protected internal bool ReTrain(bool force)
         {
             TrainData(force);
             return force;
         }
 
-        public void LoadData(IEnumerable<ImageData> data, bool train = true)
+        protected internal void LoadData(IList<ImageData> data, bool train = true)
         {
             ImageData = _context.Data.LoadFromEnumerable(data);
 
@@ -56,7 +55,7 @@ namespace API.trainer
             {
                 case true:
                 {
-                    SetAmount = data.Count();
+                    SetAmount = data.Count;
                     TrainSet = preprocessingPipeline.Fit(shuffledData).Transform(shuffledData);
                     break;
                 }
@@ -68,7 +67,7 @@ namespace API.trainer
             }
         }
 
-        public void TrainData(bool forceTrain = false)
+        protected internal void TrainData(bool forceTrain = false)
         {
             if (!File.Exists(_dataPath + "model.mod") || forceTrain)
             {
@@ -78,6 +77,14 @@ namespace API.trainer
             {
                 TrainedModel = _context.Model.Load($"{_dataPath}model.mod", out var _);
             }
+        }
+
+        protected internal ModelOutput RunImage(byte[] img)
+        {
+            var image = new ModelInput() { Image = img };
+            PredictionEngine<ModelInput, ModelOutput> pEngine =
+                _context.Model.CreatePredictionEngine<ModelInput, ModelOutput>(TrainedModel);
+            return pEngine.Predict(image);
         }
 
         private void TrainNow()
@@ -114,15 +121,7 @@ namespace API.trainer
             var i = Generation;
             File.Create(_dataPath + $"/{i}.i");
             File.Copy(_dataPath + "model.mod", _dataPath + $"gen{i}.mod");
-            _context.Model.Save(TrainedModel, TrainSet.Schema, _dataPath + "model.mod");
-        }
-
-        public ModelOutput RunImage(byte[] img)
-        {
-            var image = new ModelInput() { Image = img };
-            PredictionEngine<ModelInput, ModelOutput> pEngine =
-                _context.Model.CreatePredictionEngine<ModelInput, ModelOutput>(TrainedModel);
-            return pEngine.Predict(image);
+            _context.Model.Save(TrainedModel, TrainSet?.Schema, _dataPath + "model.mod");
         }
     }
 }
